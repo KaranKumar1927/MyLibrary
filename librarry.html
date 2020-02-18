@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head><strong><center><h1>My LIBRARY</h1></center></strong>
+  <style>
+  h1{
+  
+   color: aquamarine;
+
+  }
+  table {
+    
+  width: 250%;
+  border-radius: 8px;
+  margin-top: 6cm;
+  margin-left: 25%;
+}
+
+th, td {
+  border-radius: 8px;
+  border-style: solid;
+  border-color: black;
+  text-align: left;
+  padding: 28px;
+  background-color: rgb(221, 230, 222)
+}
+
+
+
+th {
+  border-radius: 8px;
+  border-style: solid;
+  border-color: black;
+  background-color: rgba(67, 194, 245, 0.938);
+  color: white;
+}
+
+#NewBook,#Existing{font-size: 20px;
+  border: 3px solid red;
+  border-radius: 8px;
+  background-color: bisque;
+  height: 5cm;
+  width: 5cm;
+  margin-top: 5cm;
+  margin-left: 25%;
+  cursor: pointer;
+}
+
+
+
+#Back{
+  font-size: 20px;
+  border: 3px solid red;
+  border-radius: 3px;
+  background-color: bisque;
+  height: 1cm;
+
+
+}
+label{
+
+color:aqua;
+
+}
+  
+  
+body{
+background-image: url("lib4.jpg");
+
+ 
+}
+input[type=text], select {
+  width: 30%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 30%;
+  background-color: rgb(202, 99, 39);
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #b5c23c;
+}
+
+</style>
+
+</head>
+<body>
+  
+  <div id = "listBooks"></div>
+    <button id="NewBook" >Add New Book</button>
+    <button id="Existing"  onclick="showExisting()" >Show  Books</button>
+    <button id="Back"    onclick="goBack()" style="display: none">Back</button>
+
+    <form style="display: none" id="newBookForm"><br>
+ <label for="title">Book Name</label><br>
+ <input type="text" id="title" name="title" placeholder="Book Name..."/><br>
+ <label for="author">Book Author</label><br>
+ <input type="text"  id="author" name="author"  placeholder="Name of the Author..."/><br>
+ <label for="pages">No of Pages</label><br>
+ <input type="text" id="pages" name="pages"  placeholder="number of pages"/><br>
+ <label for="readStatus">Remark:</label><br>
+ <select id="readStatus">
+   <option>Read</option>
+   <option>Not Read</option>
+ </select><br>
+ <input type="submit" value="Submit" id="submit"/>
+</form>
+<table id = "booksTable" style="display: none">
+    <thead>
+      <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Pages</th>
+      <th>Remark</th>
+      <th>Remove Book</th>
+     </tr>
+    </thead>
+    <tbody id="booksTable" >
+
+    </tbody>
+
+    </table>
+<script>
+let myLibrary = []
+
+function Book(title, author, pages , read){
+    this.title = title
+    this.author = author
+    this.pages = pages
+    this.read = read
+    }
+ 
+   document.querySelector("#NewBook").onclick = () => {
+        document.querySelector("#newBookForm").removeAttribute("style") 
+        var x= document.querySelector("#Existing");
+        x.setAttribute("style","display:none");
+        var y= document.querySelector("#NewBook");
+        y.setAttribute("style","display:none");    
+    }
+
+    document.querySelector("#submit").onclick = (event) => {
+
+        var x= document.querySelector("#Existing");
+        x.removeAttribute("style");
+        var y= document.querySelector("#NewBook");
+        y.removeAttribute("style"); 
+        event.preventDefault() //prevents the form from reseting the page
+        const bookWithAllElements = []
+         const t = document.querySelector("#title").value;
+         const a = document.querySelector("#author").value;
+         const p = document.querySelector("#pages").value;
+         if(t === '' || a === '' || p === ''){alert("fill all the fields")}
+         else{
+        bookWithAllElements.push(t)
+        bookWithAllElements.push(a)
+        bookWithAllElements.push(p)
+        bookWithAllElements.push(document.querySelector("#readStatus").value)
+        
+        addBookToLibrary(bookWithAllElements)
+        display()}
+        document.querySelector("#newBookForm").setAttribute("style", "display:none")
+    }
+
+
+
+function addBookToLibrary(bookElements){
+  
+    const entireBook = new Book (bookElements[0], bookElements[1], bookElements[2],bookElements[3])
+    myLibrary.push(entireBook)
+}
+
+function display(){
+    //clears previous output
+    document.querySelector("#listBooks").innerHTML = ""
+    let i = 0
+
+    //gets me only the last element
+    const book = myLibrary[myLibrary.length -1]
+    //create delete button
+    const button = document.createElement("button")
+    button.setAttribute("class", "deleteButton")
+    button.innerHTML = "Delete"
+    button.onclick = () => {tableRow.remove()
+    myLibrary.splice(i, 1)}
+
+    // ------------- creates table rows
+    const tableRow = document.createElement("tr")
+    const title = document.createElement("td")
+    const author = document.createElement("td")
+    const pages = document.createElement("td")
+    const readStatus = document.createElement("td")
+    const deleteButton = document.createElement("td")
+
+    title.innerHTML = book["title"]
+    author.innerHTML = book["author"]
+    pages.innerHTML = book["pages"]
+    readStatus.innerHTML = book["read"]
+    tableRow.appendChild(title)
+    tableRow.appendChild(author)
+    tableRow.appendChild(pages)
+    tableRow.appendChild(readStatus)
+    deleteButton.appendChild(button)
+    tableRow.appendChild(deleteButton)
+    document.querySelector("#booksTable").appendChild(tableRow)
+// ----------
+    
+    i++
+ 
+}
+
+function showExisting(){
+
+    var x= document.querySelector("table");
+    x.setAttribute("style","display:inline"); 
+    var z= document.querySelector("#Existing");
+    z.setAttribute("style","display:none");
+    var y= document.querySelector("#NewBook");
+    y.setAttribute("style","display:none");
+    document.querySelector("#Back").removeAttribute("style");
+}
+function goBack(){
+    var x= document.querySelector("#Existing");
+        x.setAttribute("style","display:inline");
+        var y= document.querySelector("#NewBook");
+        y.setAttribute("style","display:inline");    
+        z=document.querySelector("#booksTable")
+        z.setAttribute("style","display: none")
+    document.querySelector("#Back").setAttribute("style","display:none")
+
+
+}
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
